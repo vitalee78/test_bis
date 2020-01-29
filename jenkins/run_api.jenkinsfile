@@ -1,0 +1,56 @@
+// Check bisAPI - all tests
+properties([disableConcurrentBuilds()])
+
+pipeline {
+    agent {
+        label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+        timestamps()
+    }
+
+    triggers {
+        cron('H 7 * * *')
+    }
+    stages{
+        stage("Install packages && test") {
+            steps{
+                sh '''
+                    virtualenv --python=python3 env
+                    source env/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pytest -v --alluredir=allure-reports tests_api/test_search.py -E run
+                '''
+                }
+            }
+        }
+    environment {
+            EMAIL_TO = 'vitalee@bis077.ru'
+        }
+    post {
+
+            failure {
+                emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}',
+                        to: EMAIL_TO,
+                        subject: 'Проблема с API БИС: $PROJECT_NAME - #$BUILD_NUMBER'
+            }
+
+            aborted {
+                emailext body: 'Check console output at $BUILD_URL to view the results.',
+                        to: EMAIL_TO,
+                        subject: 'Теперь всё в норме с API БИС: $PROJECT_NAME - #$BUILD_NUMBER'
+            }
+
+            always{
+                script{
+                    allure([
+                    includeProperties: false,
+                    jdk: '',
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: 'allure-reports']]])
+                }
+            }
+    }
+}

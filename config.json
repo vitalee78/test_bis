@@ -1,0 +1,52 @@
+{
+  "web": {
+    "baseUrl": "https://bis077.ru",
+    "username": "",
+    "password": ""
+  },
+  "web_test": {
+    "baseUrl": "http://devtest.bis077.ru",
+    "username": "",
+    "password": ""
+  },
+  "db": {
+    "host": "",
+    "name": "",
+    "user": "",
+    "password": ""
+  },
+  "db_demo": {
+    "host": "",
+    "name": "",
+    "user": "",
+    "password": ""
+  },
+  "db_test": {
+    "host": "",
+    "name": "",
+    "user": "",
+    "password": ""
+  },
+  "api_bis": {
+    "url": "http://www.bis077.ru/api"
+  },
+  "api_vapteke": {
+    "url": "https://api.vapteke.ru"
+  },
+  "wd_hub": {
+    "ip_linux": "http://192.168.0.160:4444/wd/hub",
+    "ip_win": "http://192.168.0.220:2924/wd/hub"
+  },
+  "web_demo2": {
+    "baseUrl": "",
+    "username": "",
+    "password": ""
+  },
+  "ws_api": {
+    "url": "http://wsapi.bis077.ru/soap/updater1?wsdl"
+  },
+  "platform_os": {
+    "linux": "Linux 3.10.0-1062.4.3.el7.x86_64",
+    "windows": "Windows 7"
+  }
+}

@@ -1,0 +1,45 @@
+// Check bisAPI - all tests
+properties([disableConcurrentBuilds()])
+
+pipeline {
+    agent {
+        label 'master'
+        }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
+        timestamps()
+    }
+
+    triggers {
+        cron('H 8-19/1 * * *')
+    }
+    stages{
+        stage("Install packages && test") {
+            steps{
+                sh '''
+                    virtualenv --python=python3 env
+                    source env/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pytest -v tests/test_demo2.py
+                '''
+                }
+            }
+        }
+    environment {
+            EMAIL_TO = 'vitalee@bis077.ru'
+        }
+    post {
+            failure {
+                emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n -------------------------------------------------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}',
+                        to: EMAIL_TO,
+                        subject: 'Ошибки в скрипте для demo2: $PROJECT_NAME - #$BUILD_NUMBER'
+            }
+
+            aborted {
+                emailext body: 'Check console output at $BUILD_URL to view the results.',
+                        to: EMAIL_TO,
+                        subject: 'В норме скрипт для demo2: $PROJECT_NAME - #$BUILD_NUMBER'
+            }
+     }
+}
