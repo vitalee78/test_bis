@@ -13,7 +13,7 @@ idna==2.8
 importlib-metadata==1.4.0
 isodate==0.6.0
 jsonpickle==1.2
-lxml==4.4.2
+lxml==4.6.2
 mimesis==3.3.0
 more-itertools==8.1.0
 packaging==20.0
